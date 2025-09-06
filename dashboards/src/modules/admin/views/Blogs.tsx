@@ -10,9 +10,20 @@ import {
   ChevronRight,
   SortAsc,
   SortDesc,
-  Plus,
   RefreshCw,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+// import { useToast } from "@/components/ui/use-toast";
+// import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 const PostsPage = () => {
   const {
@@ -35,7 +46,12 @@ const PostsPage = () => {
 
   const [showFilters, setShowFilters] = useState(false);
   const [searchInput, setSearchInput] = useState(filters.search);
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const [commentContent, setCommentContent] = useState("");
+  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const { toast } = useToast();
+  //
   useEffect(() => {
     fetchPosts();
     fetchUniqueAuthors();
@@ -67,6 +83,37 @@ const PostsPage = () => {
   const handleFilterChange = (key, value) => {
     setFilter(key, value);
     applyFilters();
+  };
+
+  const handleAddComment = async (postId) => {
+    // if (!commentContent.trim()) {
+    //   toast({
+    //     variant: "destructive",
+    //     title: "Error",
+    //     description: "Comment content cannot be empty",
+    //   });
+    //   return;
+    // }
+
+    setIsSubmitting(true);
+    try {
+      const response = await apiClient.post(
+        `/api/posts/${postId}/comments`,
+        { content: commentContent },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      setCommentContent("");
+      setOpenDialog(false);
+      fetchPosts(); // Refresh posts to update comment count
+    } catch (error) {
+      // toast({
+      //   variant: "destructive",
+      //   title: "Error",
+      //   description: error.response?.data?.message || "Failed to add comment",
+      // });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderPaginationButtons = () => {
@@ -121,12 +168,14 @@ const PostsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold text-gray-900">Posts</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Posts
+            </h1>
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -144,10 +193,10 @@ const PostsPage = () => {
           </div>
 
           {/* Statistics */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-sm text-blue-600 font-medium">Total Posts</p>
-              <p className="text-2xl font-bold text-blue-900">
+              <p className="text-xl sm:text-2xl font-bold text-blue-900">
                 {statistics.totalPosts}
               </p>
             </div>
@@ -155,7 +204,7 @@ const PostsPage = () => {
               <p className="text-sm text-green-600 font-medium">
                 Total Comments
               </p>
-              <p className="text-2xl font-bold text-green-900">
+              <p className="text-xl sm:text-2xl font-bold text-green-900">
                 {statistics.totalComments}
               </p>
             </div>
@@ -163,7 +212,7 @@ const PostsPage = () => {
               <p className="text-sm text-purple-600 font-medium">
                 Avg Comments
               </p>
-              <p className="text-2xl font-bold text-purple-900">
+              <p className="text-xl sm:text-2xl font-bold text-purple-900">
                 {statistics.avgComments?.toFixed(1) || 0}
               </p>
             </div>
@@ -171,20 +220,20 @@ const PostsPage = () => {
               <p className="text-sm text-orange-600 font-medium">
                 Max Comments
               </p>
-              <p className="text-2xl font-bold text-orange-900">
+              <p className="text-xl sm:text-2xl font-bold text-orange-900">
                 {statistics.maxComments}
               </p>
             </div>
             <div className="bg-pink-50 p-4 rounded-lg">
               <p className="text-sm text-pink-600 font-medium">Authors</p>
-              <p className="text-2xl font-bold text-pink-900">
+              <p className="text-xl sm:text-2xl font-bold text-pink-900">
                 {statistics.uniqueAuthorsCount}
               </p>
             </div>
           </div>
 
           {/* Search and Filters */}
-          <div className="flex flex-col lg:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -206,8 +255,8 @@ const PostsPage = () => {
 
           {/* Filters Panel */}
           {showFilters && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Author
@@ -306,7 +355,7 @@ const PostsPage = () => {
 
         {/* Loading State */}
         {loading.posts ? (
-          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+          <div className="bg-white rounded-xl shadow-md p-8 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-2 text-gray-500">Loading posts...</p>
           </div>
@@ -314,18 +363,18 @@ const PostsPage = () => {
           <>
             {/* Posts Grid */}
             {posts.length === 0 ? (
-              <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+              <div className="bg-white rounded-xl shadow-md p-8 text-center">
                 <p className="text-gray-500 text-lg">No posts found</p>
                 <p className="text-gray-400 text-sm mt-1">
                   Try adjusting your filters or search terms
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {posts.map((post) => (
                   <div
                     key={post._id}
-                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                    className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200"
                   >
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-3">
@@ -360,10 +409,63 @@ const PostsPage = () => {
                       )}
                     </div>
 
-                    <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 rounded-b-lg">
-                      <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
-                        Add Comment
-                      </button>
+                    <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 rounded-b-xl">
+                      <Dialog
+                        open={openDialog && selectedPostId === post._id}
+                        onOpenChange={(open) => {
+                          setOpenDialog(open);
+                          if (!open) setCommentContent("");
+                          setSelectedPostId(open ? post._id : null);
+                        }}
+                      >
+                        <DialogTrigger asChild>
+                          <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                            Add Comment
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Add Comment</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <Textarea
+                              placeholder="Enter your comment..."
+                              value={commentContent}
+                              onChange={(e) =>
+                                setCommentContent(e.target.value)
+                              }
+                              className="w-full min-h-[100px]"
+                            />
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                onClick={() => {
+                                  setOpenDialog(false);
+                                  setCommentContent("");
+                                }}
+                                disabled={isSubmitting}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                onClick={() => handleAddComment(post._id)}
+                                disabled={
+                                  isSubmitting || !commentContent.trim()
+                                }
+                              >
+                                {isSubmitting ? (
+                                  <div className="flex items-center gap-2">
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                    Submitting...
+                                  </div>
+                                ) : (
+                                  "Submit"
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                 ))}
@@ -372,8 +474,8 @@ const PostsPage = () => {
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <div className="flex items-center justify-between">
+              <div className="bg-white rounded-xl shadow-md p-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="text-sm text-gray-700">
                     Showing{" "}
                     {(pagination.currentPage - 1) * pagination.postsPerPage + 1}{" "}

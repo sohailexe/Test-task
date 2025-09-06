@@ -32,45 +32,45 @@ const UserProfile = () => {
     <Popover modal={false}>
       <PopoverTrigger>
         <UserAvatar
-          imgUrl={user?.profileImage || ''}
-          name={user?.firstName || ''}
+          imgUrl={user?.profileImage || ""}
+          name={user?.name || ""}
           role={user?.role}
-          size={'lg'}
-          fallbackTextClassName='text-xl'
+          size={"lg"}
+          fallbackTextClassName="text-xl"
         />
       </PopoverTrigger>
-      <PopoverContent className='gap-4 flex flex-col'>
+      <PopoverContent className="gap-4 flex flex-col">
         <UserAvatar
-          imgUrl={user?.profileImage || ''}
-          name={user?.firstName || ''}
+          imgUrl={user?.name || ""}
+          name={user?.name || ""}
           role={user?.role}
-          size={'lg'}
-          fallbackTextClassName='text-xl'
+          size={"lg"}
+          fallbackTextClassName="text-xl"
         />
 
         <hr />
         <div>
-          {profileOptions.map(option => (
+          {profileOptions.map((option) => (
             <div
               key={option.label}
-              className='flex items-center gap-2 p-2 cursor-pointer hover:bg-accent'
+              className="flex items-center gap-2 p-2 cursor-pointer hover:bg-accent"
               onClick={option.onClick}
             >
-              <option.icon className='h-4 w-4' />
+              <option.icon className="h-4 w-4" />
               <span>{option.label}</span>
             </div>
           ))}
         </div>
         <hr />
         <Button
-          className='w-full'
+          className="w-full"
           onClick={() => {
             logout();
             // navigate('/login');
           }}
         >
           <LogOut />
-          {isLoading ? 'Logging out...' : 'Logout'}
+          {isLoading ? "Logging out..." : "Logout"}
         </Button>
       </PopoverContent>
     </Popover>
