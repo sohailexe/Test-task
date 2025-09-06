@@ -6,12 +6,13 @@ import BlogsLayout from '@/modules/admin/layouts/blogs-layout';
 import SettingLayout from '@/modules/admin/layouts/setting-layout';
 import SettingView from '@/modules/admin/views/setting-view';
 import BlogsView from '@/modules/admin/views/Blogs';
+import AddBlogView from "@/modules/admin/views/AddBlogView";
 const AdminPage = () => {
   return (
     <Routes>
       <Route element={<AdminLayout />}>
         <Route
-          path='/'
+          path="/"
           element={
             <ViewsLayout>
               <Overview />
@@ -19,7 +20,15 @@ const AdminPage = () => {
           }
         />
         <Route
-          path='/blogs'
+          path="/add-blog"
+          element={
+            <BlogsLayout>
+              <AddBlogView />
+            </BlogsLayout>
+          }
+        />
+        <Route
+          path="/blogs"
           element={
             <BlogsLayout>
               <BlogsView />
@@ -27,7 +36,7 @@ const AdminPage = () => {
           }
         />
         <Route
-          path='/settings'
+          path="/settings"
           element={
             <SettingLayout>
               <SettingView />
@@ -35,7 +44,7 @@ const AdminPage = () => {
           }
         />
         <Route
-          path='/goals'
+          path="/goals"
           element={
             <SettingLayout>
               <SettingView />
@@ -44,7 +53,7 @@ const AdminPage = () => {
         />
 
         <Route
-          path='/calendar'
+          path="/calendar"
           element={
             <BlogsLayout>
               <BlogsView />
@@ -52,7 +61,7 @@ const AdminPage = () => {
           }
         />
         <Route
-          path='/reports'
+          path="/reports"
           element={
             <BlogsLayout>
               <BlogsView />

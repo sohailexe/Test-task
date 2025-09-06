@@ -1,6 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { usePostsStore} from '@/store/postStore';
-import { Search, Filter, Calendar, User, MessageCircle, ChevronLeft, ChevronRight, SortAsc, SortDesc, Plus, RefreshCw } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { usePostsStore } from "@/store/postStore";
+import {
+  Search,
+  Filter,
+  Calendar,
+  User,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  SortAsc,
+  SortDesc,
+  Plus,
+  RefreshCw,
+} from "lucide-react";
 
 const PostsPage = () => {
   const {
@@ -18,7 +30,7 @@ const PostsPage = () => {
     fetchUniqueAuthors,
     fetchStatistics,
     goToPage,
-    sortBy
+    sortBy,
   } = usePostsStore();
 
   const [showFilters, setShowFilters] = useState(false);
@@ -34,7 +46,7 @@ const PostsPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchInput !== filters.search) {
-        setFilter('search', searchInput);
+        setFilter("search", searchInput);
         applyFilters();
       }
     }, 500);
@@ -43,12 +55,12 @@ const PostsPage = () => {
   }, [searchInput]);
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -60,7 +72,7 @@ const PostsPage = () => {
   const renderPaginationButtons = () => {
     const buttons = [];
     const { currentPage, totalPages } = pagination;
-    
+
     // Previous button
     buttons.push(
       <button
@@ -84,8 +96,8 @@ const PostsPage = () => {
           onClick={() => goToPage(i)}
           className={`px-3 py-2 mx-1 text-sm font-medium rounded-md ${
             i === currentPage
-              ? 'text-white bg-blue-600 border border-blue-600'
-              : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+              ? "text-white bg-blue-600 border border-blue-600"
+              : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
           }`}
         >
           {i}
@@ -123,12 +135,10 @@ const PostsPage = () => {
                 }}
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
               >
-                <RefreshCw className={`w-4 h-4 ${loading.posts ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`w-4 h-4 ${loading.posts ? "animate-spin" : ""}`}
+                />
                 Refresh
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                <Plus className="w-4 h-4" />
-                New Post
               </button>
             </div>
           </div>
@@ -137,23 +147,39 @@ const PostsPage = () => {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-sm text-blue-600 font-medium">Total Posts</p>
-              <p className="text-2xl font-bold text-blue-900">{statistics.totalPosts}</p>
+              <p className="text-2xl font-bold text-blue-900">
+                {statistics.totalPosts}
+              </p>
             </div>
             <div className="bg-green-50 p-4 rounded-lg">
-              <p className="text-sm text-green-600 font-medium">Total Comments</p>
-              <p className="text-2xl font-bold text-green-900">{statistics.totalComments}</p>
+              <p className="text-sm text-green-600 font-medium">
+                Total Comments
+              </p>
+              <p className="text-2xl font-bold text-green-900">
+                {statistics.totalComments}
+              </p>
             </div>
             <div className="bg-purple-50 p-4 rounded-lg">
-              <p className="text-sm text-purple-600 font-medium">Avg Comments</p>
-              <p className="text-2xl font-bold text-purple-900">{statistics.avgComments?.toFixed(1) || 0}</p>
+              <p className="text-sm text-purple-600 font-medium">
+                Avg Comments
+              </p>
+              <p className="text-2xl font-bold text-purple-900">
+                {statistics.avgComments?.toFixed(1) || 0}
+              </p>
             </div>
             <div className="bg-orange-50 p-4 rounded-lg">
-              <p className="text-sm text-orange-600 font-medium">Max Comments</p>
-              <p className="text-2xl font-bold text-orange-900">{statistics.maxComments}</p>
+              <p className="text-sm text-orange-600 font-medium">
+                Max Comments
+              </p>
+              <p className="text-2xl font-bold text-orange-900">
+                {statistics.maxComments}
+              </p>
             </div>
             <div className="bg-pink-50 p-4 rounded-lg">
               <p className="text-sm text-pink-600 font-medium">Authors</p>
-              <p className="text-2xl font-bold text-pink-900">{statistics.uniqueAuthorsCount}</p>
+              <p className="text-2xl font-bold text-pink-900">
+                {statistics.uniqueAuthorsCount}
+              </p>
             </div>
           </div>
 
@@ -183,40 +209,62 @@ const PostsPage = () => {
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Author
+                  </label>
                   <select
                     value={filters.authorName}
-                    onChange={(e) => handleFilterChange('authorName', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("authorName", e.target.value)
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">All Authors</option>
-                    {uniqueAuthors.map(author => (
-                      <option key={author} value={author}>{author}</option>
+                    {uniqueAuthors.map((author) => (
+                      <option key={author} value={author}>
+                        {author}
+                      </option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Min Comments</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Min Comments
+                  </label>
                   <input
                     type="number"
                     min="0"
                     value={filters.minComments}
-                    onChange={(e) => handleFilterChange('minComments', parseInt(e.target.value) || 0)}
+                    onChange={(e) =>
+                      handleFilterChange(
+                        "minComments",
+                        parseInt(e.target.value) || 0
+                      )
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Max Comments</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Max Comments
+                  </label>
                   <input
                     type="number"
                     min="0"
-                    value={filters.maxComments || ''}
-                    onChange={(e) => handleFilterChange('maxComments', e.target.value ? parseInt(e.target.value) : null)}
+                    value={filters.maxComments || ""}
+                    onChange={(e) =>
+                      handleFilterChange(
+                        "maxComments",
+                        e.target.value ? parseInt(e.target.value) : null
+                      )
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sort By
+                  </label>
                   <select
                     value={filters.sortBy}
                     onChange={(e) => sortBy(e.target.value)}
@@ -250,7 +298,9 @@ const PostsPage = () => {
         {/* Error Display */}
         {error.posts && (
           <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
-            <p className="text-red-800">Error loading posts: {error.posts.message}</p>
+            <p className="text-red-800">
+              Error loading posts: {error.posts.message}
+            </p>
           </div>
         )}
 
@@ -266,23 +316,32 @@ const PostsPage = () => {
             {posts.length === 0 ? (
               <div className="bg-white rounded-lg shadow-sm p-8 text-center">
                 <p className="text-gray-500 text-lg">No posts found</p>
-                <p className="text-gray-400 text-sm mt-1">Try adjusting your filters or search terms</p>
+                <p className="text-gray-400 text-sm mt-1">
+                  Try adjusting your filters or search terms
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {posts.map((post) => (
-                  <div key={post._id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <div
+                    key={post._id}
+                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                  >
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-xl font-semibold text-gray-900 truncate">{post.title}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900 truncate">
+                          {post.title}
+                        </h3>
                         <div className="flex items-center text-sm text-gray-500 ml-2">
                           <MessageCircle className="w-4 h-4 mr-1" />
                           {post.commentCount}
                         </div>
                       </div>
-                      
-                      <p className="text-gray-600 mb-4 line-clamp-3">{post.content}</p>
-                      
+
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {post.content}
+                      </p>
+
                       <div className="flex items-center justify-between text-sm text-gray-500">
                         <div className="flex items-center">
                           <User className="w-4 h-4 mr-1" />
@@ -293,14 +352,14 @@ const PostsPage = () => {
                           {formatDate(post.createdAt)}
                         </div>
                       </div>
-                      
+
                       {post.updatedAt !== post.createdAt && (
                         <div className="mt-2 text-xs text-gray-400">
                           Updated: {formatDate(post.updatedAt)}
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 rounded-b-lg">
                       <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
                         Read More
@@ -316,19 +375,27 @@ const PostsPage = () => {
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-gray-700">
-                    Showing {((pagination.currentPage - 1) * pagination.postsPerPage) + 1} to {Math.min(pagination.currentPage * pagination.postsPerPage, pagination.totalPosts)} of {pagination.totalPosts} posts
+                    Showing{" "}
+                    {(pagination.currentPage - 1) * pagination.postsPerPage + 1}{" "}
+                    to{" "}
+                    {Math.min(
+                      pagination.currentPage * pagination.postsPerPage,
+                      pagination.totalPosts
+                    )}{" "}
+                    of {pagination.totalPosts} posts
                   </div>
-                  
+
                   <div className="flex items-center justify-center">
                     {renderPaginationButtons()}
                   </div>
-                  
+
                   <div className="flex items-center gap-2 text-sm text-gray-700">
-                    Sort: 
-                    {filters.sortOrder === 'desc' ? 
-                      <SortDesc className="w-4 h-4" /> : 
+                    Sort:
+                    {filters.sortOrder === "desc" ? (
+                      <SortDesc className="w-4 h-4" />
+                    ) : (
                       <SortAsc className="w-4 h-4" />
-                    }
+                    )}
                     {filters.sortBy}
                   </div>
                 </div>

@@ -11,18 +11,23 @@ import { useLocation } from 'react-router';
 
 const items = [
   {
-    title: 'Overview',
-    href: '/',
+    title: "Overview",
+    href: "/",
     icon: HomeIcon,
   },
   {
-    title: 'Blogs',
-    href: '/admin/blogs',
+    title: "Add Blog",
+    href: "/admin/add-blog",
+    icon: HomeIcon,
+  },
+  {
+    title: "Blogs",
+    href: "/admin/blogs",
     icon: PersonStanding,
   },
   {
-    title: 'Users',
-    href: '/admin/users',
+    title: "Users",
+    href: "/admin/users",
     icon: Goal,
   },
   // {
@@ -36,8 +41,8 @@ const items = [
   //   icon: Calendar,
   // },
   {
-    title: 'Settings',
-    href: '/parent/settings',
+    title: "Settings",
+    href: "/parent/settings",
     icon: Settings,
   },
 ];
