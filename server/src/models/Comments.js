@@ -1,3 +1,4 @@
+// models/Comment.js
 import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
@@ -10,78 +11,42 @@ const commentSchema = new mongoose.Schema({
   post: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post',
-    required: [true, 'Post reference is required']
+    required: [true, 'Post reference is required'],
+    index: true // Add index for faster lookups
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: [true, 'Comment author is required']
   },
-
-  createdDate: {
-    type: String, // Store as YYYY-MM-DD for easy grouping
-    required: true
-  }
-
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
 });
 
-// Indexes for comments
-commentSchema.index({ post: 1, createdAt: -1 }); // Comments for a post
-commentSchema.index({ author: 1, createdAt: -1 }); // User's comments
-commentSchema.index({ createdAt: -1 }); // Recent comments
-commentSchema.index({ createdDate: 1 }); // Daily analytics
-
-// Pre-save middleware to set createdDate
-commentSchema.pre('save', function(next) {
-  if (this.isNew) {
-    this.createdDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  }
-  next();
+// Post-save middleware to update post's comment count
+commentSchema.post('save', async function() {
+  // 'this' refers to the comment document that was just saved
+  // We use constructor to access the model to prevent circular dependencies
+  await this.constructor.updatePostCommentCount(this.post);
 });
 
-// Post-save middleware to update post comment count
-commentSchema.post('save', async function(doc) {
+// Post-remove middleware (for when a comment is deleted)
+// Note: This hook works for doc.remove(), but not for Model.deleteMany() etc.
+commentSchema.post('remove', async function() {
+  await this.constructor.updatePostCommentCount(this.post);
+});
+
+
+// Static method to calculate and update the comment count on a post
+commentSchema.statics.updatePostCommentCount = async function(postId) {
+  const Post = mongoose.model('Post');
   try {
-    // Update post comment count
-    await mongoose.model('Post').findByIdAndUpdate(
-      doc.post,
-      { 
-        $inc: { commentCount: 1 },
-        lastCommentAt: new Date()
-      }
-    );
-    
-    // Update user comment count
-    await mongoose.model('User').findByIdAndUpdate(
-      doc.author,
-      { $inc: { commentCount: 1 } }
-    );
+    const count = await this.countDocuments({ post: postId });
+    await Post.findByIdAndUpdate(postId, { commentCount: count });
   } catch (error) {
-    console.error('Error updating comment counts:', error);
+    console.error(`Error updating comment count for post ${postId}:`, error);
   }
-});
+};
 
-// Post-remove middleware to update post comment count
-commentSchema.post('remove', async function(doc) {
-  try {
-    // Update post comment count
-    await mongoose.model('Post').findByIdAndUpdate(
-      doc.post,
-      { $inc: { commentCount: -1 } }
-    );
-    
-    // Update user comment count
-    await mongoose.model('User').findByIdAndUpdate(
-      doc.author,
-      { $inc: { commentCount: -1 } }
-    );
-  } catch (error) {
-    console.error('Error updating comment counts:', error);
-  }
-});
 
 export default mongoose.model('Comment', commentSchema);
