@@ -18,9 +18,8 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000; // Default to 3000 if PORT is not set
+const port = process.env.PORT || 3000;
 
-// Custom morgan format to log the API path
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms")
 );
@@ -36,22 +35,11 @@ app.use(express.urlencoded({ limit: "10mb", extended: false }));
 
 app.use(cookieParser());
 
-// Set security headers
 app.use(helmet());
 
-// Prevent XSS attacks
-// app.use(xss());
-
-// Prevent parameter pollution
 app.use(hpp());
 
-// Rate limiting
-// const limiter = rateLimit({
-//   windowMs: 10 * 60 * 1000, // 10 mins
-//   max: 100,
-// });
 
-// app.use(limiter);
 
 connectDB();
 

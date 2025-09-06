@@ -1,8 +1,7 @@
-// services/postService.js
-import Post from '../models/Posts.js';
-import User from '../models/User.js';
+import Post from "../models/Posts.js";
+import User from "../models/User.js";
 import { NotFoundError, ValidationError } from "../utils/errors/errors.js";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export default class PostService {
   /**

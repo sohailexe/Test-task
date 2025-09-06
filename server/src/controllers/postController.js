@@ -1,6 +1,5 @@
-// controllers/postController.js
-import { asyncHandler } from '../middlewares/errorHandler.js';
-import { ResponseHandler } from '../utils/ResponseHandler.js';
+import { asyncHandler } from "../middlewares/errorHandler.js";
+import { ResponseHandler } from "../utils/ResponseHandler.js";
 
 export default class PostController {
   constructor(postService) {

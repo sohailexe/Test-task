@@ -1,14 +1,12 @@
-// routes/postRoutes.js
-import express from 'express';
+import express from "express";
 import { body, query } from "express-validator";
-import PostController from '../controllers/postController.js';
-import PostService from '../services/postService.js';
-import { authenticate } from '../middlewares/authenticate.js';
-import { handleValidationErrors } from '../middlewares/handleValidateErrors.js';
+import PostController from "../controllers/postController.js";
+import PostService from "../services/postService.js";
+import { authenticate } from "../middlewares/authenticate.js";
+import { handleValidationErrors } from "../middlewares/handleValidateErrors.js";
 
 const router = express.Router();
 
-// Initialize service and controller
 const postService = new PostService();
 const postController = new PostController(postService);
 
@@ -39,22 +37,47 @@ router.post(
  * @route   GET api/posts
  * @desc    Get all posts with advanced filtering, search, and pagination
  * @access  Public
- * @query   page, limit, search, authorName, author, minComments, maxComments, 
+ * @query   page, limit, search, authorName, author, minComments, maxComments,
  *          dateFrom, dateTo, sortBy, sortOrder
  */
 router.get(
-  '/',
+  "/",
   [
     // Validation for query parameters
-    query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer.'),
-    query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be between 1 and 100.'),
-    query('minComments').optional().isInt({ min: 0 }).withMessage('Minimum comments must be non-negative.'),
-    query('maxComments').optional().isInt({ min: 0 }).withMessage('Maximum comments must be non-negative.'),
-    query('dateFrom').optional().isISO8601().withMessage('Date from must be a valid date (YYYY-MM-DD).'),
-    query('dateTo').optional().isISO8601().withMessage('Date to must be a valid date (YYYY-MM-DD).'),
-    query('sortBy').optional().isIn(['createdAt', 'updatedAt', 'title', 'authorName', 'commentCount'])
-      .withMessage('Sort by must be one of: createdAt, updatedAt, title, authorName, commentCount.'),
-    query('sortOrder').optional().isIn(['asc', 'desc']).withMessage('Sort order must be asc or desc.'),
+    query("page")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("Page must be a positive integer."),
+    query("limit")
+      .optional()
+      .isInt({ min: 1, max: 100 })
+      .withMessage("Limit must be between 1 and 100."),
+    query("minComments")
+      .optional()
+      .isInt({ min: 0 })
+      .withMessage("Minimum comments must be non-negative."),
+    query("maxComments")
+      .optional()
+      .isInt({ min: 0 })
+      .withMessage("Maximum comments must be non-negative."),
+    query("dateFrom")
+      .optional()
+      .isISO8601()
+      .withMessage("Date from must be a valid date (YYYY-MM-DD)."),
+    query("dateTo")
+      .optional()
+      .isISO8601()
+      .withMessage("Date to must be a valid date (YYYY-MM-DD)."),
+    query("sortBy")
+      .optional()
+      .isIn(["createdAt", "updatedAt", "title", "authorName", "commentCount"])
+      .withMessage(
+        "Sort by must be one of: createdAt, updatedAt, title, authorName, commentCount."
+      ),
+    query("sortOrder")
+      .optional()
+      .isIn(["asc", "desc"])
+      .withMessage("Sort order must be asc or desc."),
   ],
   handleValidationErrors,
   postController.getAllPosts
@@ -67,10 +90,16 @@ router.get(
  * @query   q (query string), limit
  */
 router.get(
-  '/suggestions',
+  "/suggestions",
   [
-    query('q').trim().isLength({ min: 2 }).withMessage('Query must be at least 2 characters long.'),
-    query('limit').optional().isInt({ min: 1, max: 20 }).withMessage('Limit must be between 1 and 20.'),
+    query("q")
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage("Query must be at least 2 characters long."),
+    query("limit")
+      .optional()
+      .isInt({ min: 1, max: 20 })
+      .withMessage("Limit must be between 1 and 20."),
   ],
   handleValidationErrors,
   postController.getPostSuggestions
@@ -90,17 +119,19 @@ router.get("/authors", postController.getUniqueAuthors);
  * @query   Same parameters as GET /posts
  */
 router.get(
-  '/statistics',
+  "/statistics",
   [
     // Same validations as getAllPosts for consistency
-    query('page').optional().isInt({ min: 1 }),
-    query('limit').optional().isInt({ min: 1, max: 100 }),
-    query('minComments').optional().isInt({ min: 0 }),
-    query('maxComments').optional().isInt({ min: 0 }),
-    query('dateFrom').optional().isISO8601(),
-    query('dateTo').optional().isISO8601(),
-    query('sortBy').optional().isIn(['createdAt', 'updatedAt', 'title', 'authorName', 'commentCount']),
-    query('sortOrder').optional().isIn(['asc', 'desc']),
+    query("page").optional().isInt({ min: 1 }),
+    query("limit").optional().isInt({ min: 1, max: 100 }),
+    query("minComments").optional().isInt({ min: 0 }),
+    query("maxComments").optional().isInt({ min: 0 }),
+    query("dateFrom").optional().isISO8601(),
+    query("dateTo").optional().isISO8601(),
+    query("sortBy")
+      .optional()
+      .isIn(["createdAt", "updatedAt", "title", "authorName", "commentCount"]),
+    query("sortOrder").optional().isIn(["asc", "desc"]),
   ],
   handleValidationErrors,
   postController.getPostStatistics
@@ -115,23 +146,23 @@ const analyticsRouter = express.Router();
  * @desc    Get authors ranked by number of posts
  * @access  Public
  */
-analyticsRouter.get('/top-authors', postController.getTopAuthors);
+analyticsRouter.get("/top-authors", postController.getTopAuthors);
 
 /**
  * @route   GET api/posts/analytics/top-commented
  * @desc    Get the top 5 most commented posts
  * @access  Public
  */
-analyticsRouter.get('/top-commented', postController.getTopCommentedPosts);
+analyticsRouter.get("/top-commented", postController.getTopCommentedPosts);
 
 /**
  * @route   GET api/posts/analytics/daily-stats
  * @desc    Get number of posts created per day for the last 7 days
  * @access  Public
  */
-analyticsRouter.get('/daily-stats', postController.getPostStatsLast7Days);
+analyticsRouter.get("/daily-stats", postController.getPostStatsLast7Days);
 
 // Mount the analytics router under the /analytics path
-router.use('/analytics', analyticsRouter);
+router.use("/analytics", analyticsRouter);
 
 export default router;

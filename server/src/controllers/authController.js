@@ -1,4 +1,3 @@
-// controllers/authController.js
 import { asyncHandler } from "../middlewares/errorHandler.js";
 import { ResponseHandler } from "../utils/ResponseHandler.js";
 
