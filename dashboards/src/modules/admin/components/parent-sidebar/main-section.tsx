@@ -5,7 +5,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { HomeIcon, Goal, Settings, PersonStanding } from 'lucide-react';
+import { HomeIcon, PersonStanding } from "lucide-react";
 import { Link } from 'react-router';
 import { useLocation } from 'react-router';
 
@@ -25,11 +25,11 @@ const items = [
     href: "/admin/blogs",
     icon: PersonStanding,
   },
-  {
-    title: "Users",
-    href: "/admin/users",
-    icon: Goal,
-  },
+  // {
+  //   title: "Users",
+  //   href: "/admin/users",
+  //   icon: Goal,
+  // },
   // {
   //   title: 'Reports',
   //   href: '/parent/reports',
@@ -40,11 +40,11 @@ const items = [
   //   href: '/parent/calendar',
   //   icon: Calendar,
   // },
-  {
-    title: "Settings",
-    href: "/parent/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "Settings",
+  //   href: "/parent/settings",
+  //   icon: Settings,
+  // },
 ];
 
 const MainSection = () => {

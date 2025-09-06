@@ -82,9 +82,11 @@ export const PostsAPI = {
   /**
    * Get all posts with filtering, search, and pagination.
    */
-  async getAllPosts(params: PostFilters = {}): Promise<ApiResponse<{ posts: Post[]; pagination: PaginationInfo; }>> {
+  async getAllPosts(
+    params: PostFilters = {}
+  ): Promise<ApiResponse<{ posts: Post[]; pagination: PaginationInfo }>> {
     try {
-      const response = await apiClient.get('/api/posts', { params });
+      const response = await apiClient.get("/api/posts", { params });
       return response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -94,9 +96,12 @@ export const PostsAPI = {
   /**
    * Create a new post.
    */
-  async createPost(postData: { title: string; content: string }): Promise<ApiResponse<Post>> {
+  async createPost(postData: {
+    title: string;
+    content: string;
+  }): Promise<ApiResponse<Post>> {
     try {
-      const response = await apiClient.post('/api/posts', postData);
+      const response = await apiClient.post("/api/posts", postData);
       return response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -106,9 +111,14 @@ export const PostsAPI = {
   /**
    * Get post suggestions for autocomplete.
    */
-  async getPostSuggestions(query: string, limit = 5): Promise<ApiResponse<PostSuggestion[]>> {
+  async getPostSuggestions(
+    query: string,
+    limit = 5
+  ): Promise<ApiResponse<PostSuggestion[]>> {
     try {
-      const response = await apiClient.get('/api/posts/suggestions', { params: { q: query, limit } });
+      const response = await apiClient.get("/api/posts/suggestions", {
+        params: { q: query, limit },
+      });
       return response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -120,7 +130,7 @@ export const PostsAPI = {
    */
   async getUniqueAuthors(): Promise<ApiResponse<string[]>> {
     try {
-      const response = await apiClient.get('/api/posts/authors');
+      const response = await apiClient.get("/api/posts/authors");
       return response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -130,20 +140,22 @@ export const PostsAPI = {
   /**
    * Get statistics for the current filter set.
    */
-  async getPostStatistics(params: PostFilters = {}): Promise<ApiResponse<PostStatistics>> {
+  async getPostStatistics(
+    params: PostFilters = {}
+  ): Promise<ApiResponse<PostStatistics>> {
     try {
-        const response = await apiClient.get('/api/posts/statistics', { params });
-        return response.data;
+      const response = await apiClient.get("/api/posts/statistics", { params });
+      return response.data;
     } catch (error) {
-        throw handleApiError(error);
+      throw handleApiError(error);
     }
   },
 
   // --- Analytics Methods ---
 
-  async getTopAuthors(): Promise<ApiResponse<any[]>> { // Replace 'any' with a proper type
+  async getTopAuthors(): Promise<ApiResponse<any[]>> {
     try {
-      const response = await apiClient.get('/api/posts/analytics/top-authors');
+      const response = await apiClient.get("/api/posts/analytics/top-authors");
       return response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -152,16 +164,18 @@ export const PostsAPI = {
 
   async getTopCommentedPosts(): Promise<ApiResponse<Post[]>> {
     try {
-      const response = await apiClient.get('/api/posts/analytics/top-commented');
+      const response = await apiClient.get(
+        "/api/posts/analytics/top-commented"
+      );
       return response.data;
     } catch (error) {
       throw handleApiError(error);
     }
   },
 
-  async getPostStatsLast7Days(): Promise<ApiResponse<any[]>> { // Replace 'any' with a proper type
+  async getPostStatsLast7Days(): Promise<ApiResponse<any[]>> {
     try {
-      const response = await apiClient.get('/api/posts/analytics/daily-stats');
+      const response = await apiClient.get("/api/posts/analytics/daily-stats");
       return response.data;
     } catch (error) {
       throw handleApiError(error);

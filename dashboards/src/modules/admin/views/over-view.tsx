@@ -1,39 +1,50 @@
-import AppAreaChart from '@/components/AppAreaChart';
-import AppBarChart from '@/components/AppBarChart';
-import AppPieChart from '@/components/AppPieChart';
-import CardList from '@/components/CardList';
-import TodoList from '@/components/TodoList';
-import OverviewWelcomeSection from '../sections/over-view-sections/overview-welcome-section';
-import ChildrensSection from '../sections/over-view-sections/childrens-section';
-import ActiveGoals from '../sections/over-view-sections/active-goals';
+import TopCommentedPostsSection from "@/components/TopCommentedPostsSection";
+import PostStatsChart from "@/components/PostStatsChart";
+import OverviewWelcomeSection from "../sections/over-view-sections/overview-welcome-section";
+import TopAuthorsSection from "../sections/over-view-sections/TopAuthorsSection";
 
 const Overview = () => {
   return (
-    <div className='w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 p-4'>
-      <div className='col-span-1 lg:col-span-2 2xl:col-span-4'>
-        <OverviewWelcomeSection />
-      </div>
-      <div className='bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2'>
-        <AppBarChart />
-      </div>
-      <div className='bg-primary-foreground p-4 rounded-lg 2xl:col-span-2'>
-        <ChildrensSection />
-      </div>
+    <div className="w-full p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {/* Welcome Section - Full Width */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-4">
+            <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+              <OverviewWelcomeSection />
+            </div>
+          </div>
 
-      <div className='bg-primary-foreground p-4 rounded-lg'>
-        <TodoList />
-      </div>
-      <div className='bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2'>
-        <AppAreaChart />
-      </div>
-      <div className='bg-primary-foreground p-4 rounded-lg'>
-        <CardList title='Popular Content' />
-      </div>
-      <div className='bg-primary-foreground p-4 rounded-lg'>
-        <AppPieChart />
-      </div>
-      <div className='bg-primary-foreground p-4 rounded-lg 2xl:col-span-2'>
-        <ActiveGoals />
+          {/* Post Stats Chart */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 h-full">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                Post Activity
+              </h2>
+              <PostStatsChart />
+            </div>
+          </div>
+
+          {/* Top Commented Posts */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 h-full">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                Top Commented Posts
+              </h2>
+              <TopCommentedPostsSection />
+            </div>
+          </div>
+
+          {/* Top Authors Section */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-4">
+            <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                Top Authors
+              </h2>
+              <TopAuthorsSection />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -362,7 +362,7 @@ const PostsPage = () => {
 
                     <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 rounded-b-lg">
                       <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
-                        Read More
+                        Add Comment
                       </button>
                     </div>
                   </div>
