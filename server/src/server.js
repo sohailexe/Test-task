@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import hpp from "hpp";
-import rateLimit from "express-rate-limit";
+// import rateLimit from "express-rate-limit";
 // import ResponseHandler from "./utils/ResponseHandler.js";
 // import { commonResponses } from "./utils/responseMessages.js";
 // import status from "http-status";
@@ -46,12 +46,12 @@ app.use(helmet());
 app.use(hpp());
 
 // Rate limiting
-const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 mins
-  max: 100,
-});
+// const limiter = rateLimit({
+//   windowMs: 10 * 60 * 1000, // 10 mins
+//   max: 100,
+// });
 
-app.use(limiter);
+// app.use(limiter);
 
 connectDB();
 
