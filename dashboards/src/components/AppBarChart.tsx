@@ -1,112 +1,69 @@
-'use client';
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from '@/components/ui/chart';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
+import { useState, useEffect } from "react";
+import { PostsAPI } from "@/apis/postsApi";
 
-const chartConfig = {
-  math: {
-    label: 'Mathematics',
-    color: 'hsl(var(--chart-1))',
-  },
-  science: {
-    label: 'Science',
-    color: 'hsl(var(--chart-2))',
-  },
-  english: {
-    label: 'English',
-    color: 'hsl(var(--chart-3))',
-  },
-  social: {
-    label: 'Social Studies',
-    color: 'hsl(var(--chart-4))',
-  },
-} satisfies ChartConfig;
+const TopCommentedPostsSection = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-const chartData = [
-  { month: 'September', math: 85, science: 78, english: 92, social: 88 },
-  { month: 'October', math: 88, science: 82, english: 89, social: 91 },
-  { month: 'November', math: 92, science: 85, english: 94, social: 87 },
-  { month: 'December', math: 89, science: 88, english: 96, social: 92 },
-  { month: 'January', math: 94, science: 91, english: 93, social: 89 },
-  { month: 'February', math: 91, science: 87, english: 97, social: 94 },
-];
+  const fetchTopCommentedPosts = async () => {
+    setLoading(true);
+    try {
+      const response = await PostsAPI.getTopCommentedPosts();
+      if (response.success) {
+        setPosts(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching top commented posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const ParentDashboardChart = () => {
+  useEffect(() => {
+    fetchTopCommentedPosts();
+  }, []);
+
   return (
-    <div className=' rounded-lg p-6 shadow-sm border'>
-      <div className='mb-6'>
-        <h2 className='text-xl font-semibold  mb-2'>Academic Performance Overview</h2>
-        <p className='text-sm '>Monthly subject-wise performance scores for your child</p>
-      </div>
-
-      <ChartContainer config={chartConfig} className='min-h-[300px] w-full'>
-        <BarChart
-          accessibilityLayer
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+    <div className="">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-lg font-medium">Top Commented Posts</h1>
+        <Button
+          variant="outline"
+          onClick={fetchTopCommentedPosts}
+          disabled={loading}
         >
-          <CartesianGrid strokeDasharray='3 3' vertical={false} className='opacity-30' />
-          <XAxis
-            dataKey='month'
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={value => value.slice(0, 3)}
-            className='text-sm'
+          <RefreshCw
+            className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
           />
-          <YAxis
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            domain={[0, 100]}
-            tickFormatter={value => `${value}%`}
-            className='text-sm'
-          />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                formatter={(value, name) => [
-                  `${value}%`,
-                  chartConfig[name as keyof typeof chartConfig]?.label,
-                ]}
-                labelFormatter={label => `Month: ${label}`}
-              />
-            }
-          />
-          <ChartLegend content={<ChartLegendContent />} />
-          <Bar dataKey='math' fill='var(--chart-4)' radius={[2, 2, 0, 0]} />
-          <Bar dataKey='science' fill='var(--chart-1)' radius={[2, 2, 0, 0]} />
-          <Bar dataKey='english' fill='var(--chart-2)' radius={[2, 2, 0, 0]} />
-          <Bar dataKey='social' fill='var(--chart-3)' radius={[2, 2, 0, 0]} />
-        </BarChart>
-      </ChartContainer>
-
-      <div className='mt-4 grid grid-cols-2 md:grid-cols-4 gap-4'>
-        <div className='text-center p-3  rounded-lg'>
-          <div className='text-2xl font-bold text-blue-600'>91%</div>
-          <div className='text-sm '>Math Average</div>
-        </div>
-        <div className='text-center p-3  rounded-lg'>
-          <div className='text-2xl font-bold text-green-600'>85%</div>
-          <div className='text-sm '>Science Average</div>
-        </div>
-        <div className='text-center p-3  rounded-lg'>
-          <div className='text-2xl font-bold text-purple-600'>94%</div>
-          <div className='text-sm '>English Average</div>
-        </div>
-        <div className='text-center p-3  rounded-lg'>
-          <div className='text-2xl font-bold text-orange-600'>90%</div>
-          <div className='text-sm '>Social Average</div>
-        </div>
+          Refresh
+        </Button>
+      </div>
+      <div className="flex flex-col gap-4">
+        {posts.map((post) => (
+          <Card
+            key={post._id}
+            className="flex-row items-center justify-between gap-4 p-4"
+          >
+            <CardContent className="flex-1 p-0">
+              <CardTitle className="text-sm font-medium">
+                {post.title}
+              </CardTitle>
+              <p className="text-sm text-gray-500">by {post.authorName}</p>
+            </CardContent>
+            <CardFooter className="p-0 justify-end flex">
+              <span className="text-sm">
+                {post.commentCount}{" "}
+                {post.commentCount === 1 ? "comment" : "comments"}
+              </span>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );
 };
 
-export default ParentDashboardChart;
+export default TopCommentedPostsSection;
